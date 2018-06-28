@@ -65,7 +65,6 @@ static void setupClock() {
 }
 
 static const uint16_t PULSE_WIDTH = 100;
-static const uint16_t PERIOD_WIDTH = 62500;
 static const uint16_t PERIOD_SCAlING = 8;
 
 
@@ -78,7 +77,6 @@ static void setupPwm() {
     // Period is approximately 244 Hz
     // the LEDs are intentionally left somewhat dim,
     // as the full brightness can be painful to look at.
-    PWM1_REG(PWM_CMP0) = PERIOD_WIDTH / 4;
     PWM1_REG(PWM_CMP1) = PULSE_WIDTH;
     PWM1_REG(PWM_CFG_SCALE) |= PERIOD_SCAlING;
 
@@ -87,6 +85,11 @@ static void setupPwm() {
     GPIO_REG(GPIO_IOF_EN ) |= (1 << PIN_3_OFFSET);
     GPIO_REG(GPIO_OUTPUT_XOR) &= ~(1 << PIN_3_OFFSET);
 }
+static void sleep(uint16_t microseconds) {
+    volatile uint64_t* now = (volatile uint64_t*)(CLINT_CTRL_ADDR + CLINT_MTIME);
+    volatile uint64_t then = *now + microseconds;
+    while (*now < then) {}
+}
 
 void main(void) {
 
@@ -94,9 +97,22 @@ void main(void) {
     setupUartToPrint();
     setupPwm();
 
+    uint16_t min = 125, max = 1250, counter = min;
+    uint8_t delta = 1;
+
     while (1) {
-        volatile uint64_t* now = (volatile uint64_t*)(CLINT_CTRL_ADDR + CLINT_MTIME);
-        volatile uint64_t then = *now + 100;
-        while (*now < then) {}
+        PWM1_REG(PWM_CMP0) = counter;
+        if (delta) {
+            counter += 1;
+        } else {
+            counter -= 1;
+        }
+
+        if (delta && counter >= max) {
+            delta = 0;
+        } else if (!delta && counter <= min) {
+            delta = 1;
+        }
+        sleep(100);
     }
 }
