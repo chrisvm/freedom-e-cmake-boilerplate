@@ -1,3 +1,5 @@
+motor_movement
+motor_movement.o
 cmake-build-debug/
 .idea/
 *.a
