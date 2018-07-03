@@ -64,19 +64,20 @@ static void setupClock() {
     PRCI_REG(PRCI_HFROSCCFG) &= ~(ROSC_EN(1));
 }
 
+// 100 ticks @ 62.5kHz is 1.6ms
 static const uint16_t PULSE_WIDTH = 100;
+
+ // 2^8 scaling (16mHz / 2^8)
 static const uint16_t PERIOD_SCAlING = 8;
 
 
 static void setupPwm() {
     // setup pwm1
     PWM1_REG(PWM_CFG) = 0;
-    PWM1_REG(PWM_CFG) = (PWM_CFG_ENALWAYS);
+    PWM1_REG(PWM_CFG) = (PWM_CFG_ENALWAYS | PWM_CFG_ZEROCMP);
     PWM1_REG(PWM_COUNT) = 0;
 
-    // Period is approximately 244 Hz
-    // the LEDs are intentionally left somewhat dim,
-    // as the full brightness can be painful to look at.
+    // set the pwm corners
     PWM1_REG(PWM_CMP1) = PULSE_WIDTH;
     PWM1_REG(PWM_CFG_SCALE) |= PERIOD_SCAlING;
 
@@ -85,6 +86,7 @@ static void setupPwm() {
     GPIO_REG(GPIO_IOF_EN ) |= (1 << PIN_3_OFFSET);
     GPIO_REG(GPIO_OUTPUT_XOR) &= ~(1 << PIN_3_OFFSET);
 }
+
 static void sleep(uint16_t microseconds) {
     volatile uint64_t* now = (volatile uint64_t*)(CLINT_CTRL_ADDR + CLINT_MTIME);
     volatile uint64_t then = *now + microseconds;
@@ -113,6 +115,6 @@ void main(void) {
         } else if (!delta && counter <= min) {
             delta = 1;
         }
-        sleep(100);
+        sleep(10);
     }
 }
