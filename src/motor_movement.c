@@ -1,16 +1,18 @@
 #include <stdint.h>
-#include "platform.h"
+#include <platform.h>
 
 #ifndef _SIFIVE_HIFIVE1_H
 #error "'motor_movement' only supports the HiFive1 Dev board."
 #endif
 
-static void _putc(char c) {
+static void _putc(char c)
+{
     while ((int32_t) UART0_REG(UART_REG_TXFIFO) < 0);
     UART0_REG(UART_REG_TXFIFO) = c;
 }
 
-int _getc(char * c) {
+static int _getc(char * c)
+{
     int32_t val = (int32_t) UART0_REG(UART_REG_RXFIFO);
     if (val > 0) {
         *c =  val & 0xFF;
@@ -19,15 +21,15 @@ int _getc(char * c) {
     return 0;
 }
 
-
-static void _puts(const char * s) {
+static void _puts(const char * s)
+{
     while (*s != '\0'){
         _putc(*s++);
     }
 }
 
-static void setupUartToPrint() {
-
+static void setupUartToPrint()
+{
     // Configure UART to print
     GPIO_REG(GPIO_OUTPUT_VAL) |= IOF0_UART0_MASK;
     GPIO_REG(GPIO_OUTPUT_EN)  |= IOF0_UART0_MASK;
@@ -50,13 +52,12 @@ static void setupUartToPrint() {
     }
 }
 
-static void setupClock() {
-
+static void setupClock()
+{
     // Make sure the HFROSC is on before the next line:
     PRCI_REG(PRCI_HFROSCCFG) |= ROSC_EN(1);
 
-    // Run off 16 MHz Crystal for accuracy. Note that the
-    // first line is
+    // Run off 16 MHz Crystal for accuracy.
     PRCI_REG(PRCI_PLLCFG) = (PLL_REFSEL(1) | PLL_BYPASS(1));
     PRCI_REG(PRCI_PLLCFG) |= (PLL_SEL(1));
 
@@ -71,7 +72,8 @@ static const uint16_t PULSE_WIDTH = 100;
 static const uint16_t PERIOD_SCAlING = 8;
 
 
-static void setupPwm() {
+static void setupPwm()
+{
     // setup pwm1
     PWM1_REG(PWM_CFG) = 0;
     PWM1_REG(PWM_CFG) = (PWM_CFG_ENALWAYS | PWM_CFG_ZEROCMP);
@@ -87,14 +89,15 @@ static void setupPwm() {
     GPIO_REG(GPIO_OUTPUT_XOR) &= ~(1 << PIN_3_OFFSET);
 }
 
-static void sleep(uint16_t microseconds) {
+static void sleep(uint16_t microseconds)
+{
     volatile uint64_t* now = (volatile uint64_t*)(CLINT_CTRL_ADDR + CLINT_MTIME);
     volatile uint64_t then = *now + microseconds;
     while (*now < then) {}
 }
 
-void main(void) {
-
+void main(void)
+{
     setupClock();
     setupUartToPrint();
     setupPwm();
