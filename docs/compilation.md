@@ -1,0 +1,1 @@
+riscv64-unknown-elf-gcc -O2 -fno-builtin-printf -DUSE_PLIC -DUSE_M_TIME -g -march=rv32imac -mabi=ilp32 -mcmodel=medany -c -o /home/cvelez/Development/freedom-e-sdk/bsp/env/start.o /home/cvelez/Development/freedom-e-sdk/bsp/env/start.S
