@@ -1,3 +1,5 @@
+include(${CMAKE_CURRENT_LIST_DIR}/sdk_config.cmake)
 set(CMAKE_SYSTEM_NAME Generic)
-set(CMAKE_C_COMPILER riscv64-unknown-linux-gnu-gcc)
-
+set(freedom-toolchain-path ${freedom-sdk-path}/work/build/riscv-gnu-toolchain/riscv64-unknown-elf)
+set(CMAKE_C_COMPILER ${freedom-toolchain-path}/prefix/bin/riscv64-unknown-elf-gcc)
+set(CMAKE_ASM_COMPILER ${freedom-toolchain-path}/prefix/bin/riscv64-unknown-elf-gcc)
