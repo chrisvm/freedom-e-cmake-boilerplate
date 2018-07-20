@@ -1,5 +1,6 @@
 motor_movement
 cmake-build-debug/
+cmake-build-debug-riscv/
 .idea/
 build/
 *.a
