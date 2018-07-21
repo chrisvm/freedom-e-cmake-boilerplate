@@ -22,28 +22,28 @@ hold the path to the sdk and options to enable features in the build process. Th
 
 **`freedom-sdk-path`**: Absolute path to the root dir of the sdk.
 
-        set(freedom-sdk-path /path/to/sdk/)
+    set(freedom-sdk-path /path/to/sdk/)
 
 **`use-plic`**: (Optional) Enable/disable PLIC interrupt handling.
 
-		# default: FALSE
-        set(use-plic [FALSE/TRUE])
+	# default: FALSE
+    set(use-plic [FALSE/TRUE])
 
 **`use-mtime`**: (Optional) Enable/disable timer interrupt handling.
 
-		# default: FALSE
-        set(use-mtime [FALSE/TRUE])
+	# default: FALSE
+    set(use-mtime [FALSE/TRUE])
 
 **`use-sdk-tools`**: (Optional) Enable using prebuilt/installed gnu Toolchain
 
-		# default: TRUE
-		set(use-sdk-tools [FALSE/TRUE])
+	# default: TRUE
+	set(use-sdk-tools [FALSE/TRUE])
 
 **`prebuilt-tools-path`**: (Optional) Specify the path to the external gnu Toolchain
 
-		# default: /opt/riscv
-		set(prebuilt-tools-path /path/to/riscv/toolchain)
-		
+	# default: /opt/riscv
+	set(prebuilt-tools-path /path/to/riscv/toolchain)
+
 #### Using the pre built binary tools
 
 Prebuilt tools for Linux/OSX/Windows/CentOS at [sifive's tools page][1] under the
