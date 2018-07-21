@@ -63,7 +63,7 @@ gnu toolchain. It defaults to `/opt/riscv`.
 **Note**: The values set on the `riscv_toolchain.cmake` file are only used when running cmake
 without a previous run already cached, i.e when running for the first time or if you delete the
 directory used for building (`/build` is used on the building example bellow). Deleting this dir
-should make cmake u
+should make cmake use the toolchain cmake file.
 
 ## Building
 
